@@ -1,0 +1,17 @@
+CREATE TABLE Person (
+  id INT PRIMARY KEY,
+  name VARCHAR(100),
+  geburtsdatum DATE
+);
+
+CREATE TABLE Mitarbeiter (
+  person_id INT PRIMARY KEY,
+  abteilung VARCHAR(50),
+  FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+
+CREATE TABLE Kunde (
+  person_id INT PRIMARY KEY,
+  kundennummer VARCHAR(20),
+  FOREIGN KEY (person_id) REFERENCES Person(id)
+);
