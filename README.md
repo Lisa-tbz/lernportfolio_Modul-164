@@ -135,3 +135,72 @@ Wenn Lieferadressen nicht global eindeutig sind, sondern nur pro Kunde eindeutig
 
 Produkt → Produktbild
 Bilder sind nur im Kontext des Produkts sinnvoll
+
+
+## Datenbankmanagementsysteme (DBMS)
+
+Ein Datenbankmanagementsystem (DBMS) ist eine Software zur Verwaltung von Datenbanken. Es ermöglicht die strukturierte Speicherung, Organisation und den Zugriff auf Daten.
+
+Hauptfunktionen eines DBMS
+
+Integrierte Datenhaltung: Zentrale Verwaltung aller Daten, um Redundanzen zu vermeiden.
+
+Datenbanksprache: Bereitstellung von Sprachen wie DDL (Data Definition Language), DML (Data Manipulation Language), DQL (Data Query Language), DCL (Data Control Language) und TCL (Transaction Control Language) zur Definition, Manipulation und Abfrage von Daten.
+
+Benutzersichten (Views): Ermöglichen unterschiedliche Sichten auf die Daten für verschiedene Benutzergruppen.
+
+Konsistenzkontrolle: Sicherstellung der Datenintegrität durch Integritätsbedingungen.
+
+Transaktionen: Unterstützung von Transaktionen, um Datenänderungen atomar und konsistent durchzuführen.
+
+Mehrbenutzerfähigkeit: Gleichzeitiger Zugriff mehrerer Benutzer auf die Datenbank mit Synchronisation zur Vermeidung von Konflikten.
+
+Datensicherung und Wiederherstellung: Mechanismen zur Sicherung der Daten und Wiederherstellung im Fehlerfall.
+
+Vorteile eines DBMS
+
+Standardisierung: Einheitliche Datenformate und -strukturen.
+
+Effizienter Datenzugriff: Optimierte Abfragen und Datenmanipulation.
+
+Kürzere Entwicklungszeiten: Wiederverwendbare Komponenten und Funktionen.
+
+Hohe Flexibilität: Einfache Anpassung an sich ändernde Anforderungen.
+
+Hohe Verfügbarkeit: immer zuverlässiger Zugriff auf Daten 
+
+Wirtschaftlichkeit: Zentrale Verwaltung reduziert Gesamtkosten.
+
+Nachteile eines DBMS
+
+Hohe Anfangsinvestitionen: Kosten für Hardware und Software.
+
+Komplexität: Erfordert spezialisiertes Personal.
+
+![image](https://github.com/user-attachments/assets/825162c7-8727-4d03-9f92-d7f641cd2a36)
+
+Top 10 Datenbanken im Mai 2025 (laut DB-Engines Ranking)
+Die folgenden Datenbanken führen das DB-Engines Ranking im Mai 2025 an:
+
+Oracle – Führend in Unternehmenslösungen mit umfangreichen Funktionen.
+
+MySQL – Weit verbreitetes Open-Source-RDBMS, besonders für Webanwendungen.
+
+Microsoft SQL Server – Integriert in das Microsoft-Ökosystem, beliebt bei Unternehmen.
+
+PostgreSQL – Fortschrittliches Open-Source-RDBMS mit starker Community.
+
+MongoDB – Führende dokumentenorientierte NoSQL-Datenbank.
+
+Snowflake – Cloud-basierte Data-Warehouse-Lösung mit starkem Wachstum.
+
+Redis – In-Memory-Datenbank, ideal für schnelle Datenzugriffe.
+
+Elasticsearch – Such- und Analyse-Engine, häufig für Log- und Textanalysen verwendet.
+
+IBM Db2 – Bewährte Lösung für große Unternehmen mit komplexen Anforderungen.
+
+SQLite – Leichtgewichtiges, eingebettetes RDBMS für mobile und Desktop-Anwendungen
+
+MindMap
+![image](https://github.com/user-attachments/assets/dd330aef-2ba0-4e3d-9de8-5bd0f084e463)
