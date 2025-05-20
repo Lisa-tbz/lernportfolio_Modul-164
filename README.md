@@ -44,3 +44,23 @@ Beispiel Generalisierung: Fahrzeug
 
 
 ![image](https://github.com/user-attachments/assets/17f80d3b-4951-4c77-bfc0-edea37c5d0e5)
+
+Praktische Umsetzung:
+CREATE TABLE Person (
+  id INT PRIMARY KEY,
+  name VARCHAR(100),
+  birthdate DATE
+);
+
+CREATE TABLE Employee (
+  person_id INT PRIMARY KEY,
+  department VARCHAR(50),
+  FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+
+CREATE TABLE Client (
+  person_id INT PRIMARY KEY,
+  clientNumber VARCHAR(20),
+  FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+
