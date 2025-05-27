@@ -255,3 +255,120 @@ Gibt an, welches Teil in welchem Produkt vorkommt, mit Menge.
 
 Lässt sich mit rekursiven SQL-Abfragen lösen.
 
+Aufgabe Insert
+
+
+![image](https://github.com/user-attachments/assets/0a9cb626-dd75-4aea-9b0a-c65c791c7a3e)
+
+2. Die folgenden Anweisungen enthalten Fehler. Finden und korrigieren Sie die Fehler. Probieren Sie die Funktionsfähigkeit der Befehle an der obigen Tabelle aus.
+a.
+
+INSERT INTO (nachname, wohnort, land_id) VALUES ('Fesenkampp', 'Duis-burg', 3);
+
+Fehler: Tabellennamen fehlt.
+
+Korrekt:
+
+INSERT INTO kunden (nachname, wohnort, land_id) VALUES ('Fesenkampp', 'Duis-burg', 3);
+
+b.
+
+INSERT INTO kunden ('vorname') VALUES ('Herbert');
+
+Fehler: Spaltennamen darf nicht in einfachen Hochkommas stehen.
+
+Korrekt:
+
+INSERT INTO kunden (vorname) VALUES ('Herbert');
+
+c.
+
+INSERT INTO kunden (nachname, vorname, wohnort, land_id) VALUES ('Schulter', 'Albert', 'Duisburg', 'Deutschland');
+
+Fehler: 'Deutschland' ist kein gültiger INT für land_id.
+
+Korrekt:
+
+INSERT INTO kunden (nachname, vorname, wohnort, land_id) VALUES ('Schulter', 'Albert', 'Duisburg', 3);
+
+d.
+
+INSERT INTO kunden ('', 'Brunhild', 'Sulcher', 1, 'Süderstade');
+
+Fehler: Ungültige Syntax – Spaltenliste fehlt, 'Brunhild' ist kein gültiger Tabelleneintrag.
+Korrekt (Langform):
+
+INSERT INTO kunden (vorname, nachname, land_id, wohnort) VALUES ('Brunhild', 'Sulcher', 1, 'Süderstade');
+
+e.
+
+INSERT INTO kunden VALUES ('Jochen', 'Schmied', 2, 'Solingen');
+
+Fehler: kunde_id fehlt → muss durch NULL ersetzt werden. 
+Korrekt:
+
+INSERT INTO kunden VALUES (NULL, 'Jochen', 'Schmied', 2, 'Solingen');
+
+f.
+
+INSERT INTO kunden VALUES ('', 'Doppelbrecher', 2, '');
+
+Fehler: Zu wenige Werte (nur 4 statt 5), außerdem '' als kunde_id ist ungültig.
+Korrekt:
+
+INSERT INTO kunden (nachname, land_id) VALUES ('Doppelbrecher', 2);
+
+g.
+
+INSERT INTO kunden (nachname, wohnort, land_id) VALUES ('Christoph', 'Fesenkampp', 'Duisburg', 3);
+
+Fehler: Zu viele Werte für 3 Spalten.
+Korrekt (3 Werte, 3 Spalten):
+
+INSERT INTO kunden (nachname, wohnort, land_id) VALUES ('Fesenkampp', 'Duisburg', 3);
+
+h.
+
+INSERT INTO kunden (vorname) VALUES ('Herbert');
+
+Dieser ist korrekt! Kein Fehler.
+i.
+
+INSERT INTO kunden (nachname, vorname, wohnort, land_id) VALUES (Schulter, Albert, Duisburg, 1);
+
+Fehler: Strings müssen in Anführungszeichen stehen.
+Korrekt:
+
+INSERT INTO kunden (nachname, vorname, wohnort, land_id) VALUES ('Schulter', 'Albert', 'Duisburg', 1);
+
+j.
+
+INSERT INTO kunden VALUE ('', "Brunhild", "Sulcher", 1, "Süderstade");
+
+Fehler:
+
+VALUE → muss VALUES heißen
+
+'' für kunde_id ungültig → verwende NULL
+
+ besser keine doppelten Anführungszeichen
+
+Korrekt:
+
+INSERT INTO kunden VALUES (NULL, 'Brunhild', 'Sulcher', 1, 'Süderstade');
+
+k.
+
+INSERT INTO kunden VALUE ('', 'Jochen', 'Schmied', 2, Solingen);
+
+Fehler:
+
+VALUE → muss VALUES heißen
+
+'' für kunde_id → besser NULL
+
+Solingen ohne Quotes → Fehler
+
+Korrekt:
+
+INSERT INTO kunden VALUES (NULL, 'Jochen', 'Schmied', 2, 'Solingen');
