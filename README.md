@@ -204,3 +204,54 @@ SQLite – Leichtgewichtiges, eingebettetes RDBMS für mobile und Desktop-Anwend
 
 MindMap
 ![image](https://github.com/user-attachments/assets/dd330aef-2ba0-4e3d-9de8-5bd0f084e463)
+
+
+
+
+Tag 3
+
+![image](https://github.com/user-attachments/assets/b5fbf64e-1388-48fd-82ba-fba6075fe614)
+
+
+Mehrfachbeziehungen (Mehrfachrollen)
+
+Zwei Tabellen (z. B. tbl_Fahrten und tbl_Orte) können mehrere unabhängige Beziehungen zueinander haben.
+
+Diese Beziehungen müssen aussagekräftig benannt werden (z. B. "Startort", "Zielort", "wird angefahren in").
+
+Bei mc:mc-Beziehungen (viele-zu-viele) wird eine Transformationstabelle benötigt, z. B. tbl_Fahrtorte, die alle Orte auflistet, die bei einer Fahrt angefahren werden.
+
+(2) Rekursion (strenge Hierarchie)
+
+Eine Tabelle kann auch Beziehungen zu sich selbst haben.
+
+Beispiel: In tbl_Mitarbeiter ist jeder Mitarbeiter einem Vorgesetzten unterstellt.
+
+Dafür braucht es einen Fremdschlüssel in derselben Tabelle, der auf die eigene ID verweist.
+
+Da der oberste Mitarbeiter keinen Vorgesetzten hat, muss das Feld NULL-fähig sein.
+
+Es handelt sich um eine 1:mc-Beziehung (ein Vorgesetzter – mehrere Untergebene).
+
+(3) Einfache Hierarchie (Netzwerkstruktur)
+Wenn mehrere Vorgesetzte möglich sind, reicht eine Rekursion nicht.
+
+Man braucht eine Zwischentabelle, z. B. tbl_Hierarchie, mit zwei Fremdschlüsseln:
+
+Einer für den Vorgesetzten
+
+Einer für den Mitarbeiter
+
+So entsteht eine mc:mc-Beziehung innerhalb derselben Tabelle, aber mit unterschiedlichen Rollen ("ist Vorgesetzter von", "ist Mitarbeiter von").
+
+(4) Stücklistenproblem (mehrstufige Produktstruktur)
+Beispiel: Ein Produkt besteht aus mehreren Teilen, diese wiederum aus weiteren Teilen.
+
+Alle Artikel (Einzelteile + Baugruppen) stehen in einer Tabelle (tbl_Artikel).
+
+Eine zusätzliche Zusammensetzungstabelle wird benötigt:
+
+Gibt an, welches Teil in welchem Produkt vorkommt, mit Menge.
+
+Lässt sich mit rekursiven SQL-Abfragen lösen.
+
