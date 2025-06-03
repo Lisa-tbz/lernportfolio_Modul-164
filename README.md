@@ -440,13 +440,4 @@ ON UPDATE CASCADE
 
 ON DELETE und ON UPDATE: Aktionen bei Löschung/Aktualisierung der referenzierten Zeile (CASCADE, SET NULL, NO ACTION, etc.)
 
-Zusatz: Beispiel einer vollständigen Spalten- und Constraint-Definition
 
-CREATE TABLE DetailTab (
-  id INT PRIMARY KEY,
-  master_id INT NOT NULL UNIQUE,
-  CONSTRAINT fk_detail_master FOREIGN KEY (master_id)
-    REFERENCES MasterTab(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-);
