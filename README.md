@@ -372,3 +372,81 @@ Solingen ohne Quotes → Fehler
 Korrekt:
 
 INSERT INTO kunden VALUES (NULL, 'Jochen', 'Schmied', 2, 'Solingen');
+
+
+## Constraint
+
+1. Wie wird beim Fremdschlüssel der Constraint NOT NULL erstellt?
+Der NOT NULL Constraint wird direkt bei der Definition der Fremdschlüsselspalte in der Tabelle angegeben, z.B.:
+
+
+ALTER TABLE DetailTab
+  MODIFY COLUMN fk_id INT NOT NULL;
+Oder bei der Spaltendefinition:
+
+
+CREATE TABLE DetailTab (
+  fk_id INT NOT NULL,
+  ...
+);
+Das NOT NULL erzwingt, dass die Spalte keinen NULL-Wert annimmt.
+
+Damit ist sichergestellt, dass jede Zeile immer einen gültigen Wert für den Fremdschlüssel hat.
+
+Dies ist eine Spalten-Einschränkung, kein eigenständiger CONSTRAINT-Name.
+
+2. Weshalb wird für jeden Fremdschlüssel ein Index erstellt?
+Fremdschlüsselspalten müssen indexiert sein, damit die referenzielle Integrität effizient geprüft werden kann.
+
+Der Index ermöglicht schnelle Suchen und Verknüpfungen bei JOINs oder bei der Überprüfung, ob ein Wert im referenzierten Primärschlüssel existiert.
+
+Ohne Index würde jede Fremdschlüsselüberprüfung eine Volltabelle-Scan verursachen, was die Performance stark verschlechtert.
+
+Deshalb erzeugt MySQL (und auch andere RDBMS) automatisch einen Index auf der FK-Spalte, falls noch keiner existiert.
+
+3. Wie wird der Constraint UNIQUE für einen Fremdschlüssel im Workbench mit Forward Engineering erstellt?
+Wenn im Modell die FK-Spalte mit UNIQUE markiert ist, generiert Workbench einen UNIQUE-Index oder -Constraint.
+
+Die Definition sieht z.B. so aus:
+
+ALTER TABLE DetailTab
+  ADD CONSTRAINT uq_detailtab_fk_id UNIQUE (fk_id);
+Oder in der Spaltendefinition:
+
+fk_id INT NOT NULL UNIQUE
+Das UNIQUE stellt sicher, dass jeder Wert in der FK-Spalte nur einmal vorkommen darf.
+
+Dadurch wird die Beziehung auf 1:1 oder c:c eingeschränkt.
+
+4. Allgemeine Syntax für die CONSTRAINT-Anweisung (Fremdschlüssel)
+Die Fremdschlüssel-Constraint wird meistens so definiert:
+
+CONSTRAINT <constraint_name> FOREIGN KEY (<fk_column>)
+REFERENCES <referenced_table> (<referenced_column>)
+[ON DELETE <action>]
+[ON UPDATE <action>]
+Beispiel:
+
+
+CONSTRAINT fk_detail_master FOREIGN KEY (master_id)
+REFERENCES MasterTab(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+<constraint_name>: eindeutiger Name des Constraints
+
+<fk_column>: die Fremdschlüsselspalte in der Tabelle
+
+<referenced_table> und <referenced_column>: referenzierte Tabelle und Spalte
+
+ON DELETE und ON UPDATE: Aktionen bei Löschung/Aktualisierung der referenzierten Zeile (CASCADE, SET NULL, NO ACTION, etc.)
+
+Zusatz: Beispiel einer vollständigen Spalten- und Constraint-Definition
+
+CREATE TABLE DetailTab (
+  id INT PRIMARY KEY,
+  master_id INT NOT NULL UNIQUE,
+  CONSTRAINT fk_detail_master FOREIGN KEY (master_id)
+    REFERENCES MasterTab(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
