@@ -522,3 +522,36 @@ Aliase zu den Attributen werden verwendet, um Spaltennamen lesbarer zu machen. E
 
 Tabellenaliase müssen im gesamten Statement benutzt werden. 
 
+## Aggregatfunktionen
+
+In MySQL dienen Aggregatsfunktionen dazu, Werte in einer Spalte zusammenzufassen oder zu berechnen.
+
+COUNT()
+Zählt die Anzahl der Zeilen:
+SELECT COUNT(*) FROM customers; – zählt alle Zeilen
+SELECT COUNT(salary) FROM customers; – zählt nur Zeilen ohne NULL in salary
+
+SUM()
+Bildet die Summe aller Werte einer Spalte:
+SELECT SUM(salary) FROM employees;
+
+AVG()
+Berechnet den Durchschnitt:
+SELECT AVG(salary) FROM employees;
+
+MIN()
+Gibt den kleinsten Wert zurück:
+SELECT MIN(salary) FROM employees;
+
+MAX()
+Gibt den größten Wert zurück:
+SELECT MAX(salary) FROM employees;
+
+
+## Group by
+
+In MySQL wird das GROUP BY-Statement verwendet, um Datensätze anhand einer oder mehrerer Spalten zu gruppieren. Es wird meist zusammen mit Aggregatsfunktionen wie COUNT, SUM, AVG, MIN oder MAX eingesetzt, um gruppierte Daten zusammenzufassen.
+
+## Having
+
+In MySQL wird HAVING verwendet, um aggregierte Gruppenergebnisse nach einem GROUP BY-Statement zu filtern. Im Gegensatz zu WHERE, das vor der Gruppierung wirkt, filtert HAVING nach der Gruppierung, basierend auf Aggregatsfunktionen wie SUM, AVG, COUNT usw.
