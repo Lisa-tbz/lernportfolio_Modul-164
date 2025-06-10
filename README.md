@@ -440,4 +440,85 @@ ON UPDATE CASCADE
 
 ON DELETE und ON UPDATE: Aktionen bei Löschung/Aktualisierung der referenzierten Zeile (CASCADE, SET NULL, NO ACTION, etc.)
 
+## Löschen in professionellen Datenbanken und Datenintegrität
+
+In professionellen Datenbanksystemen wird das Löschen von Daten mit dem SQL-Befehl DELETE in der Regel vermieden. Der Grund ist der mögliche Informationsverlust, der nicht nur ungewollt ist, sondern auch rechtliche oder betriebliche Probleme verursachen kann. Statt Daten zu löschen, werden folgende Strategien verwendet:
+
+Inaktiv setzen statt löschen: Zum Beispiel wird bei einem austretenden Mitarbeiter der Datensatz beibehalten, aber als „inaktiv“ markiert.
+
+Historisierung und Protokollierung: Daten wie Zugriffe oder Aktionen bleiben nachvollziehbar. Das ist z. B. in Banken oder bei Systemen wie Wikipedia wichtig.
+
+Stornierungen statt Löschungen: In Kassensystemen werden getätigte Käufe nicht gelöscht, sondern durch eine Stornierung neutralisiert – oft mit Zusatzinformationen wie Zeit und Grund.
+
+Zeitliche Abbildung durch Zusatztabellen: Statt Updates werden Zeitverläufe (z. B. Ausleihen) durch neue, separate Datensätze dokumentiert.
+
+## Datenintegrität:
+
+Datenintegrität in einer Datenbank bezieht sich auf die Genauigkeit, Konsistenz und Vollständigkeit der in der Datenbank gespeicherten Daten. Sie stellt sicher, dass die Daten korrekt sind und nicht versehentlich oder absichtlich verändert werden.
+
+Eindeutigkeit & Konsistenz: Verhindert doppelte oder widersprüchliche Daten.
+
+Referenzielle Integrität: Beziehungen zwischen Tabellen bleiben korrekt.
+
+Datentypen & Einschränkungen: Sorgen für korrekte und gültige Eingaben.
+
+Validierung: Prüft Eingaben vor der Speicherung.
+
+
+## Fremdschlüssel-Optionen beim Löschen 
+Beim Löschen eines Datensatzes in der Primärtabelle greifen definierte Regeln für abhängige Datensätze (Fremdschlüssel) in Detailtabellen:
+
+NO ACTION / RESTRICT:	Löschen nur möglich, wenn keine abhängigen Datensätze existieren. (Standard)
+CASCADE:	Abhängige Datensätze werden automatisch mitgelöscht. Vorsicht vor Datenverlust!
+SET NULL / DEFAULT:	Fremdschlüssel wird auf NULL bzw. Default-Wert gesetzt, wenn zulässig.
+
+## Weshalb können in professionellen Datenbanken nicht einfach so Daten gelöscht werden?
+
+In professionellen Datenbanken darf nicht einfach gelöscht werden, weil dadurch wichtige Informationen verloren gehen. Besonders wenn Beziehungen zu anderen Tabellen bestehen, führt das Löschen eines Eintrags oft zu Inkonsistenzen oder dem Verlust von Historie (z. B. bei Logins, Bestellungen, Buchungen). Statt zu löschen, wird meist:
+
+Inaktiv gesetzt (z. B. „Status: inaktiv“),
+
+historisiert (alte Daten bleiben mit Zeitstempel erhalten),
+
+oder storniert (z. B. durch Gegentransaktionen).
+
+## Wer stellt die referentielle Integrität sicher?
+
+Die referentielle Integrität wird vom Datenbankmanagementsystem (DBMS) sichergestellt, sobald Fremdschlüssel-Constraints (FOREIGN KEY) zwischen Tabellen definiert wurden. Diese Constraints kontrollieren automatisch, dass:
+
+keine ungültigen Verweise entstehen,
+
+bei Lösch- oder Änderungsoperationen entsprechende Regeln (ON DELETE / ON UPDATE) eingehalten werden.
+
+## Referentielle Intergrität
+Referentielle Integrität bedeutet, dass ein Fremdschlüssel (Foreign Key) in einer Tabelle nur auf existierende Werte im Primärschlüssel (Primary Key) einer anderen Tabelle verweisen darf.
+
+
+## Aufgabe Renferentielle Datenintergriät
+Als Datenbank-Entwickler stellen Sie fest, dass bei der Dateneingabe ein Fehler passiert ist. Anstatt «4000 Basel» wollten Sie «3000 Bern» eintragen. Sie versuchen Ihren Fehler zu korrigieren, indem Sie in der Tabelle «tbl_ort» die Ortschaft «Basel» löschen.
+Was stellen sie fest? Erklären Sie!
+
+Man erhält folgenden Fehler:
+Error Code: 1451. Cannot delete or update a parent row: a foreign key constraint fails
+
+Erklärung: Weil tbl_stationen einen Fremdschlüssel-Constraint auf tbl_orte hat, kann Basel nicht gelöscht werden, solange es in tbl_stationen referenziert wird.
+Das ist referentielle Integrität: Die Datenbank schützt sich selbst vor „hängenden“ Verweisen.
+
+Was müssten Sie tun, damit nun die richtige Ortschaft in der Datenbank eingetragen sowie die falsch eingegebene Ortschaft gelöscht werden kann?
+Setzen Sie Ihren Plan um.
+
+INSERT INTO tbl_orte (PLZ, Ortsbezeichnung) VALUES ('3000', 'Bern');
+UPDATE tbl_stationen
+SET FS_ID_Ort = 6
+WHERE FS_ID_Ort = 5;
+DELETE FROM tbl_orte
+WHERE ID_Ort = 5;
+
+## Alias
+
+Ein Alias in SQL wird verwendet, um einer Spalte in einer Tabelle oder einer Tabelle einen temporären Namen zu geben.
+
+Aliase zu den Attributen werden verwendet, um Spaltennamen lesbarer zu machen. Ein Alias existiert nur für die Dauer dieser Abfrage.
+
+Tabellenaliase müssen im gesamten Statement benutzt werden. 
 
