@@ -552,6 +552,23 @@ SELECT MAX(salary) FROM employees;
 
 In MySQL wird das GROUP BY-Statement verwendet, um Datensätze anhand einer oder mehrerer Spalten zu gruppieren. Es wird meist zusammen mit Aggregatsfunktionen wie COUNT, SUM, AVG, MIN oder MAX eingesetzt, um gruppierte Daten zusammenzufassen.
 
+
 ## Having
 
 In MySQL wird HAVING verwendet, um aggregierte Gruppenergebnisse nach einem GROUP BY-Statement zu filtern. Im Gegensatz zu WHERE, das vor der Gruppierung wirkt, filtert HAVING nach der Gruppierung, basierend auf Aggregatsfunktionen wie SUM, AVG, COUNT usw.
+
+
+## Subquery
+Eine Subquery ist eine SQL-Abfrage, die innerhalb einer anderen Abfrage steht, typischerweise in WHERE, FROM, HAVING oder SELECT. Auch in UPDATE, INSERT oder DELETE kann sie verwendet werden. Sie wird in Klammern geschrieben und zuerst ausgeführt.
+
+## Arten von Subqueries
+
+### Skalare Subquery
+Gibt genau einen Wert (eine Zeile, eine Spalte) zurück.
+
+Nur sinnvoll mit Vergleichsoperatoren wie =, <, >, <=, >=.
+
+### Nicht-skalare Subquery
+Gibt mehrere Zeilen oder Spalten zurück.
+
+Wird z. B. mit IN, NOT IN, EXISTS, ANY, ALL kombiniert.
