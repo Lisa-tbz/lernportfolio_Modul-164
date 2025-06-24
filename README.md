@@ -572,3 +572,35 @@ Nur sinnvoll mit Vergleichsoperatoren wie =, <, >, <=, >=.
 Gibt mehrere Zeilen oder Spalten zurück.
 
 Wird z. B. mit IN, NOT IN, EXISTS, ANY, ALL kombiniert.
+
+
+
+## Backup-Arten
+Online-Backup: Datenbank bleibt aktiv, Änderungen werden zwischengespeichert.
+
+Offline-Backup: Datenbank wird für die Sicherung heruntergefahren  
+
+## Sicherungsverfahren
+Voll-Backup: Sichert alle Daten komplett, hoher Speicherbedarf, aber einfach wiederherstellbar.
+
+Differentielles Backup: Sichert nur Änderungen seit dem letzten Voll-Backup, platzsparender.
+
+Inkrementelles Backup: Sichert nur Änderungen seit dem letzten Backup (inkrementell oder voll), sehr effizient, aber komplexere Wiederherstellung.
+
+## Tools zur Backup-Erstellung
+mysqldump: Shell-basiertes Voll-Backup für MySQL.
+
+phpMyAdmin: GUI-Export, aber beschränkt bei großen Datenmengen.
+
+BigDump: Ermöglicht Import großer Backups.
+
+HeidiSQL: Windows-Tool ohne Automatisierung, robust bei großen Backups.
+
+Mariabackup: Open-Source für physische Online-Backups in MariaDB.
+
+## Weitere Empfehlungen
+Backups auf externen, geschützten Medien speichern.
+
+Daten verschlüsseln (z. B. bei Diebstahl).
+
+Backup-User mit eingeschränkten Rechten anlegen
