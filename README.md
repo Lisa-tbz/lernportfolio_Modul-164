@@ -604,3 +604,43 @@ Backups auf externen, geschützten Medien speichern.
 Daten verschlüsseln (z. B. bei Diebstahl).
 
 Backup-User mit eingeschränkten Rechten anlegen
+
+## Welche Nachteile hat logisches Backup?
+Nachteile des logischen Backups (wie mit mysqldump):
+
+Langsamkeit: Es ist langsamer als ein physisches Backup, da der Server die Daten lesen und in SQL-Befehle umwandeln muss.
+
+Grösse: Das Backup-File ist meist grösser, weil es in Textform vorliegt.
+
+Wiederherstellung: Das Einspielen des Backups dauert länger, da alle SQL-Befehle ausgeführt werden müssen.
+
+Integrität: Da der Server während des Backups laufen muss, können Datenänderungen passieren, wenn keine Sperren gesetzt werden.
+
+Kein Backup von Log- oder Konfigurationsdateien (nur Daten und Struktur).
+
+## Was ist der Unterschied zwischen online- und offline-Backups?
+Online-Backup (Hot Backup):
+
+Backup wird gemacht, während der MySQL-Server läuft und Daten verarbeitet.
+
+Clients können (meistens) weiterhin auf die Daten zugreifen.
+
+Backup-Tools müssen sicherstellen, dass keine Daten während des Backups verändert werden, um Inkonsistenzen zu vermeiden (Locking).
+
+Offline-Backup (Cold Backup):
+
+Backup wird gemacht, während der MySQL-Server gestoppt ist.
+
+Einfacher, da keine gleichzeitigen Zugriffe stattfinden.
+
+Clients können in dieser Zeit nicht auf die Daten zugreifen (Downtime).
+
+## Was ist ein «snapshot Backup»?
+Ein Snapshot Backup ist eine Momentaufnahme des Dateisystems zu einem bestimmten Zeitpunkt.
+
+Es ist eine logische Kopie des Dateisystems, die sehr schnell erstellt wird, da nur die geänderten Daten seit dem Snapshot separat gespeichert werden (Copy-on-Write).
+
+Der MySQL-Server selbst bietet diese Funktion nicht, sie wird durch das Betriebssystem oder Drittanbieter-Tools bereitgestellt (z.B. LVM, ZFS, Veritas).
+
+Vorteil: Sehr schnelle Backups mit minimaler Auswirkung auf die laufenden Systeme.
+
