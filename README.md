@@ -42,6 +42,45 @@ Beispiel Generalisierung: Fahrzeug
 	
   ○ LKW (eigene Attribute: Ladegewicht, Anhängerkupplung)
 
+  # Normalisierung
+
+## 1NF (First Normal Form)
+- Atomare Attributwerte  
+- Keine Wiederholungsgruppen
+
+## 2NF (Second Normal Form)
+- Volle funktionale Abhängigkeit vom Primärschlüssel
+
+## 3NF (Third Normal Form)
+- Keine transitiven Abhängigkeiten
+
+---
+
+# ER-Modellierung
+
+## Beziehungstypen
+- 1:1 (One-to-One)  
+- 1:N (One-to-Many)  
+- M:N (Many-to-Many)
+
+## Komponenten
+- Entitäten  
+- Attribute  
+- Beziehungen
+
+---
+
+# Transaktionen (SQL Beispiel)
+
+```sql
+START TRANSACTION;
+
+UPDATE Konten SET saldo = saldo - 100 WHERE id = 1;
+UPDATE Konten SET saldo = saldo + 100 WHERE id = 2;
+
+COMMIT;
+
+```
 
 ![image](https://github.com/user-attachments/assets/17f80d3b-4951-4c77-bfc0-edea37c5d0e5)
 
@@ -198,7 +237,7 @@ Redis – In-Memory-Datenbank, ideal für schnelle Datenzugriffe.
 
 Elasticsearch – Such- und Analyse-Engine, häufig für Log- und Textanalysen verwendet.
 
-IBM Db2 – Bewährte Lösung für große Unternehmen mit komplexen Anforderungen.
+IBM Db2 – Bewährte Lösung für grosse Unternehmen mit komplexen Anforderungen.
 
 SQLite – Leichtgewichtiges, eingebettetes RDBMS für mobile und Desktop-Anwendungen
 
@@ -313,7 +352,7 @@ f.
 
 INSERT INTO kunden VALUES ('', 'Doppelbrecher', 2, '');
 
-Fehler: Zu wenige Werte (nur 4 statt 5), außerdem '' als kunde_id ist ungültig.
+Fehler: Zu wenige Werte (nur 4 statt 5), ausserdem '' als kunde_id ist ungültig.
 Korrekt:
 
 INSERT INTO kunden (nachname, land_id) VALUES ('Doppelbrecher', 2);
@@ -347,7 +386,7 @@ INSERT INTO kunden VALUE ('', "Brunhild", "Sulcher", 1, "Süderstade");
 
 Fehler:
 
-VALUE → muss VALUES heißen
+VALUE → muss VALUES heissen
 
 '' für kunde_id ungültig → verwende NULL
 
@@ -363,7 +402,7 @@ INSERT INTO kunden VALUE ('', 'Jochen', 'Schmied', 2, Solingen);
 
 Fehler:
 
-VALUE → muss VALUES heißen
+VALUE → muss VALUES heissen
 
 '' für kunde_id → besser NULL
 
@@ -544,7 +583,7 @@ Gibt den kleinsten Wert zurück:
 SELECT MIN(salary) FROM employees;
 
 MAX()
-Gibt den größten Wert zurück:
+Gibt den grössten Wert zurück:
 SELECT MAX(salary) FROM employees;
 
 
@@ -590,11 +629,11 @@ Inkrementelles Backup: Sichert nur Änderungen seit dem letzten Backup (inkremen
 ## Tools zur Backup-Erstellung
 mysqldump: Shell-basiertes Voll-Backup für MySQL.
 
-phpMyAdmin: GUI-Export, aber beschränkt bei großen Datenmengen.
+phpMyAdmin: GUI-Export, aber beschränkt bei grossen Datenmengen.
 
-BigDump: Ermöglicht Import großer Backups.
+BigDump: Ermöglicht Import grosser Backups.
 
-HeidiSQL: Windows-Tool ohne Automatisierung, robust bei großen Backups.
+HeidiSQL: Windows-Tool ohne Automatisierung, robust bei grossen Backups.
 
 Mariabackup: Open-Source für physische Online-Backups in MariaDB.
 
