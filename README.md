@@ -1,31 +1,62 @@
-## Theorie: Generalisierung und Spezialisierung in der Datenbankmodellierung
- Ausgangspunkt
-In der Attribut-basierten Datenbankmodellierung werden Informationen über reale Objekte in Entitätstypen mit Attributen organisiert. Dabei entstehen manchmal Redundanzen:
+# Theorie: Datenbankmodellierung
 
-• mehrere Entitätstypen viele gemeinsame Attribute besitzen,
+# Inhaltsverzeichnis
 
-• und ein reales Objekt durch mehrere Entitätstypen dargestellt wird (z. B. Mitarbeiter ist auch Kunde).
+1. [Generalisierung & Spezialisierung](#generalisierung--spezialisierung)  
+2. [Normalisierung](#normalisierung)  
+3. [ER-Modellierung](#er-modellierung)  
+4. [Transaktionen (SQL)](#transaktionen-sql)  
+5. [Identifying vs. Non-Identifying Relationship](#identifying-vs-non-identifying-relationship)  
+6. [DBMS – Datenbankmanagementsysteme](#dbms--datenbankmanagementsysteme)  
+7. [Mehrfachbeziehungen, Rekursion & Hierarchie](#mehrfachbeziehungen-rekursion--hierarchie)  
+8. [SQL Insert: Fehleranalyse](#sql-insert-fehleranalyse)  
+9. [Constraints & Indizes](#constraints--indizes)
 
-Problem
-• Gemeinsame Attribute mehrfach gespeichert → Redundanz
- 
-• Unterschiedliche Attribute verteilt → Inkonsistenzgefahr
- 
-• Widerspruch zur Regel von [Zehnder, 1989]: „Lokale Attribute dürfen nur einmal in einer Datenbank vorkommen.“
+---
 
-Lösung: Generalisierung & Spezialisierung
-Generalisierung:
+## 1. Generalisierung & Spezialisierung
 
-• Gemeinsame Attribute werden in einem übergeordneten Entitätstyp zusammengefasst (z. B. Person).
+### Ausgangspunkt
+In der Attribut-basierten Modellierung entstehen Redundanzen, wenn:
+- mehrere Entitätstypen viele gemeinsame Attribute haben
+- ein reales Objekt mehrfach modelliert wird (z. B. **Mitarbeiter** ist auch **Kunde**)
 
-Spezialisierung:
+### Problem
+-  Redundanz durch doppelte Speicherung gemeinsamer Attribute  
+-  Inkonsistenzgefahr durch verteilte Datenhaltung  
+-  Widerspruch zur Regel: *„Lokale Attribute dürfen nur einmal in einer DB vorkommen.“* (Zehnder, 1989)
 
-• Spezifische Entitätstypen (z. B. Mitarbeiter, Kunde, Fahrer) erben diese gemeinsamen Attribute, haben aber zusätzlich eigene Attribute.
-Beziehungstyp:
-→ is_a-Beziehung (z. B. Ein Fahrer ist eine Person)
-![image](https://github.com/user-attachments/assets/b3e65d2a-dbf1-4610-930f-23ed769cddfb)
+### Lösung
 
+####  Generalisierung:
+Gemeinsame Attribute → zusammengefasst in **übergeordneter Entität** (z. B. `Person`)
 
+####  Spezialisierung:
+Spezielle Entitäten (z. B. `Mitarbeiter`, `Kunde`) → erben gemeinsame Attribute + eigene Attribute  
+→ _is-a-Beziehung_: `Fahrer is_a Person`
+
+![Generalisierung Beispiel](https://github.com/user-attachments/assets/b3e65d2a-dbf1-4610-930f-23ed769cddfb)
+
+### Beispiel (relational umgesetzt)
+```sql
+CREATE TABLE Person (
+  id INT PRIMARY KEY,
+  name VARCHAR(100),
+  birthdate DATE
+);
+
+CREATE TABLE Employee (
+  person_id INT PRIMARY KEY,
+  department VARCHAR(50),
+  FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+
+CREATE TABLE Client (
+  person_id INT PRIMARY KEY,
+  clientNumber VARCHAR(20),
+  FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+```
  Technische Umsetzung in relationalen Datenbanken
 
 • Tabelle Person enthält gemeinsame Attribute wie Vorname, Nachname, Geburtsdatum
@@ -82,220 +113,152 @@ COMMIT;
 
 ```
 
-![image](https://github.com/user-attachments/assets/17f80d3b-4951-4c77-bfc0-edea37c5d0e5)
+## Beziehungsarten: Identifying / Non-Identifying Relationship
 
-Praktische Umsetzung:
+### Identifying Relationship (identifizierende Beziehung)
 
-CREATE TABLE Person (
-  
-  id INT PRIMARY KEY,
-  
-  name VARCHAR(100),
-  
-  birthdate DATE
-);
+- **Definition**: Die Child-Tabelle wird eindeutig durch die Parent-Tabelle identifiziert.
+- **Technisch**: Der Fremdschlüssel der Parent-Tabelle ist **Teil des Primärschlüssels** der Child-Tabelle.
+- **Primärschlüssel** der Kind-Tabelle ist **zusammengesetzt** aus mindestens zwei Attributen.
+- **Bedeutung**: Der Datensatz der Child-Tabelle **existiert nur im Kontext** der Parent-Tabelle.
 
-CREATE TABLE Employee (
-  
-  person_id INT PRIMARY KEY,
-  
-  department VARCHAR(50),
-  
-  FOREIGN KEY (person_id) REFERENCES Person(id)
-);
+**Beispiel:**
+- `Gebäude → Raum`: Ein Raum existiert nur innerhalb eines bestimmten Gebäudes.
+- `Raum(Gebäude_ID, Raumnummer)` → `Gebäude_ID` ist **FK + Teil des PK**
 
-CREATE TABLE Client (
-  
-  person_id INT PRIMARY KEY,
-  
-  clientNumber VARCHAR(20),
-  
-  FOREIGN KEY (person_id) REFERENCES Person(id)
-);
+### Non-Identifying Relationship (nicht-identifizierende Beziehung)
 
-## Beziehungsarten: Indentifying / Non-Identifying Relationship
-- Identifying Relationship (identifizierende Beziehung)
-- 
-Definition: Die Child-Tabelle wird eindeutig durch die Parent-Tabelle identifiziert.
+- **Definition**: Die Child-Tabelle kann unabhängig von der Parent-Tabelle identifiziert werden.
+- **Technisch**: Der Fremdschlüssel ist **nicht Teil des Primärschlüssels**, sondern ein zusätzliches Attribut.
+- **Bedeutung**: Der Datensatz der Child-Tabelle kann **auch ohne die Parent-Tabelle eindeutig** existieren.
 
-Technisch: Der Fremdschlüssel der Parent-Tabelle ist Teil von dem Primärschlüssel der Child-Tabelle.
+**Beispiel:**
+- `Person → Ausweis`: Ein Ausweis gehört zu einer Person, aber hat eine eigene eindeutige ID.
+- `Ausweis(ID, person_id)` → `person_id` ist FK, aber **nicht Teil des PK**
 
-Primärschlüssel der Kind-Tabelle ist zusammengesetzt aus mindestens zwei Attributen.
+---
 
-Bedeutung: Der Datensatz der Child-Tabelle existiert nur im Kontext der Parent-Tabelle.
+### Identifying Relationship – Beispiel: Bestellung → Bestellposition
 
-Beispiel:
+- Eine Bestellposition existiert **nur im Kontext** einer bestimmten Bestellung.
+- `Bestellposition(bestellung_id, positionsnr)` → `bestellung_id` ist **FK + Teil des PK**
 
-Gebäude → Raum: Ein Raum existiert nur innerhalb eines bestimmten Gebäudes.
+**Warum sinnvoll?**
+- Eine Bestellposition ohne zugehörige Bestellung ergibt **keinen Sinn**.
+- Die Kombination aus `bestellung_id` und `positionsnr` identifiziert jede Position eindeutig.
 
-Raum(Gebäude_ID, Raumnummer) → Gebäude_ID ist FK + Teil des PK
+![Identifying Beispiel](https://github.com/user-attachments/assets/2ea71f36-2651-42ac-8461-bf7cdb4a1e3e)
+![Non Identifying Beispiel](https://github.com/user-attachments/assets/351f171a-13fa-4135-9436-36594a0fc499)
 
-Non-Identifying Relationship (nicht-identifizierende Beziehung)
+---
 
-Definition: Die Child-Tabelle kann unabhängig von der Parent-Tabelle identifiziert werden.
+### Anwendungsfälle für Identifying Relationships (laut ChatGPT)
 
-Technisch: Der Fremdschlüssel ist nicht Teil des Primärschlüssels, sondern ein zusätzliches Attribut.
+- `Buch → Kapitel`: Kapitel existieren nicht ohne Buch  
+  → Primärschlüssel: `buch_id`, `kapitelnummer`
 
-Bedeutung: Der Datensatz der Child-Tabelle kann auch ohne die Parent-Tabelle eindeutig existieren.
+- `Kunde → Lieferadresse`: Wenn Lieferadressen **nicht global eindeutig**, sondern **nur pro Kunde eindeutig** sein müssen
 
-Beispiel:
+- `Produkt → Produktbild`: Bilder sind nur im Kontext des Produkts sinnvoll
 
-Person → Ausweis: Ein Ausweis gehört zu einer Person, aber der Ausweis hat eine eigene eindeutige ID.
-
-Ausweis(ID, person_id) → person_id ist FK, aber nicht Teil des PK
-
-Identifying: 
-
-Beispiel: Bestellung → Bestellposition
-
-Eine Bestellposition existiert nur im Kontext einer bestimmten Bestellung
-
-Bestellposition(bestellung_id, positionsnr) → bestellung_id ist FK + Teil des PK
-
-Warum Identifying sinnvoll?
-
-Eine Bestellposition ohne zugehörige Bestellung macht keinen Sinn.
-
-Die Kombination aus bestellung_id und positionsnr identifiziert jede Position eindeutig.
-
-
-Identifying Beispiel
-![image](https://github.com/user-attachments/assets/2ea71f36-2651-42ac-8461-bf7cdb4a1e3e)
-
-Non Identifying Beispiel
-![image](https://github.com/user-attachments/assets/351f171a-13fa-4135-9436-36594a0fc499)
-
-Anwendungsfälle für Identifying Relationships (laut ChatGPT)
-Buch → Kapitel
-Kapitel existieren nicht ohne Buch, Kapitelnummer + Buch-ID = Primärschlüssel
-
-Kunde → Lieferadresse
-Wenn Lieferadressen nicht global eindeutig sind, sondern nur pro Kunde eindeutig sein müssen
-
-Produkt → Produktbild
-Bilder sind nur im Kontext des Produkts sinnvoll
-
+---
 
 ## Datenbankmanagementsysteme (DBMS)
 
-Ein Datenbankmanagementsystem (DBMS) ist eine Software zur Verwaltung von Datenbanken. Es ermöglicht die strukturierte Speicherung, Organisation und den Zugriff auf Daten.
+Ein **Datenbankmanagementsystem (DBMS)** ist eine Software zur Verwaltung von Datenbanken. Es ermöglicht die strukturierte Speicherung, Organisation und den Zugriff auf Daten.
 
-Hauptfunktionen eines DBMS
+### Hauptfunktionen eines DBMS
 
-Integrierte Datenhaltung: Zentrale Verwaltung aller Daten, um Redundanzen zu vermeiden.
+- **Integrierte Datenhaltung**: Zentrale Verwaltung aller Daten, um Redundanzen zu vermeiden
+- **Datenbanksprache**: Bereitstellung von:
+  - DDL (Definition)
+  - DML (Manipulation)
+  - DQL (Abfrage)
+  - DCL (Rechte)
+  - TCL (Transaktionen)
+- **Benutzersichten (Views)**: Unterschiedliche Sichten für verschiedene Benutzergruppen
+- **Konsistenzkontrolle**: Sicherstellung der Datenintegrität
+- **Transaktionen**: Datenänderungen sind atomar und konsistent
+- **Mehrbenutzerfähigkeit**: Gleichzeitiger Zugriff mit Synchronisation
+- **Datensicherung und Wiederherstellung**: Backup- und Recovery-Mechanismen
 
-Datenbanksprache: Bereitstellung von Sprachen wie DDL (Data Definition Language), DML (Data Manipulation Language), DQL (Data Query Language), DCL (Data Control Language) und TCL (Transaction Control Language) zur Definition, Manipulation und Abfrage von Daten.
+### Vorteile eines DBMS
 
-Benutzersichten (Views): Ermöglichen unterschiedliche Sichten auf die Daten für verschiedene Benutzergruppen.
+- Standardisierung
+- Effizienter Datenzugriff
+- Kürzere Entwicklungszeiten
+- Hohe Flexibilität
+- Hohe Verfügbarkeit
+- Wirtschaftlichkeit
 
-Konsistenzkontrolle: Sicherstellung der Datenintegrität durch Integritätsbedingungen.
+### Nachteile eines DBMS
 
-Transaktionen: Unterstützung von Transaktionen, um Datenänderungen atomar und konsistent durchzuführen.
+- Hohe Anfangsinvestitionen
+- Komplexität / Know-how erforderlich
 
-Mehrbenutzerfähigkeit: Gleichzeitiger Zugriff mehrerer Benutzer auf die Datenbank mit Synchronisation zur Vermeidung von Konflikten.
+![DBMS Grafik](https://github.com/user-attachments/assets/825162c7-8727-4d03-9f92-d7f641cd2a36)
 
-Datensicherung und Wiederherstellung: Mechanismen zur Sicherung der Daten und Wiederherstellung im Fehlerfall.
+---
 
-Vorteile eines DBMS
+### Top 10 Datenbanken im Mai 2025 (laut DB-Engines Ranking)
 
-Standardisierung: Einheitliche Datenformate und -strukturen.
+1. **Oracle** – Enterprise-Lösungen mit vielen Features  
+2. **MySQL** – Open-Source, beliebt für Web  
+3. **Microsoft SQL Server** – Teil des Microsoft-Ökosystems  
+4. **PostgreSQL** – Mächtiges Open-Source-RDBMS  
+5. **MongoDB** – Dokumentenorientiertes NoSQL-System  
+6. **Snowflake** – Cloud-Data-Warehouse  
+7. **Redis** – In-Memory, extrem schnell  
+8. **Elasticsearch** – Analyse- und Suchengine  
+9. **IBM Db2** – Enterprise-RDBMS  
+10. **SQLite** – Embedded Datenbank
 
-Effizienter Datenzugriff: Optimierte Abfragen und Datenmanipulation.
+![MindMap](https://github.com/user-attachments/assets/dd330aef-2ba0-4e3d-9de8-5bd0f084e463)
 
-Kürzere Entwicklungszeiten: Wiederverwendbare Komponenten und Funktionen.
+---
 
-Hohe Flexibilität: Einfache Anpassung an sich ändernde Anforderungen.
+## Weitere Beziehungstypen
 
-Hohe Verfügbarkeit: immer zuverlässiger Zugriff auf Daten 
+### Mehrfachbeziehungen (Mehrfachrollen)
 
-Wirtschaftlichkeit: Zentrale Verwaltung reduziert Gesamtkosten.
+- Eine Tabelle hat **mehrere Beziehungen** zu einer anderen, z. B.:
+  - `tbl_Fahrten → tbl_Orte`: "Startort", "Zielort", "wird angefahren in"
+- Bei m:n-Beziehung → **Transformationstabelle**, z. B. `tbl_Fahrtorte`
 
-Nachteile eines DBMS
+---
 
-Hohe Anfangsinvestitionen: Kosten für Hardware und Software.
+### Rekursion (strenge Hierarchie)
 
-Komplexität: Erfordert spezialisiertes Personal.
+- Tabelle referenziert **sich selbst**
+- Beispiel: `tbl_Mitarbeiter` → Vorgesetztenbeziehung
+  - Spalte `vorgesetzter_id` verweist auf `mitarbeiter_id`
+  - NULL für oberste Ebene
+  - 1:n-Beziehung
 
-![image](https://github.com/user-attachments/assets/825162c7-8727-4d03-9f92-d7f641cd2a36)
+---
 
-Top 10 Datenbanken im Mai 2025 (laut DB-Engines Ranking)
-Die folgenden Datenbanken führen das DB-Engines Ranking im Mai 2025 an:
+### Einfache Hierarchie (Netzwerkstruktur)
 
-Oracle – Führend in Unternehmenslösungen mit umfangreichen Funktionen.
+- Mehrere Vorgesetzte pro Mitarbeiter
+- Braucht Zwischentabelle, z. B. `tbl_Hierarchie`
+  - `mitarbeiter_id`
+  - `vorgesetzter_id`
+- m:n-Rekursion
 
-MySQL – Weit verbreitetes Open-Source-RDBMS, besonders für Webanwendungen.
+---
 
-Microsoft SQL Server – Integriert in das Microsoft-Ökosystem, beliebt bei Unternehmen.
+### Stücklistenproblem (mehrstufige Produktstruktur)
 
-PostgreSQL – Fortschrittliches Open-Source-RDBMS mit starker Community.
+- Tabelle `tbl_Artikel`: enthält Einzelteile & Baugruppen
+- Zwischentabelle `tbl_Zusammensetzung`
+  - Teil-ID
+  - Produkt-ID
+  - Menge
+- → Mit **rekursiven Abfragen** lösbar
 
-MongoDB – Führende dokumentenorientierte NoSQL-Datenbank.
+---
 
-Snowflake – Cloud-basierte Data-Warehouse-Lösung mit starkem Wachstum.
-
-Redis – In-Memory-Datenbank, ideal für schnelle Datenzugriffe.
-
-Elasticsearch – Such- und Analyse-Engine, häufig für Log- und Textanalysen verwendet.
-
-IBM Db2 – Bewährte Lösung für grosse Unternehmen mit komplexen Anforderungen.
-
-SQLite – Leichtgewichtiges, eingebettetes RDBMS für mobile und Desktop-Anwendungen
-
-MindMap
-![image](https://github.com/user-attachments/assets/dd330aef-2ba0-4e3d-9de8-5bd0f084e463)
-
-
-
-
-Tag 3
-
-![image](https://github.com/user-attachments/assets/b5fbf64e-1388-48fd-82ba-fba6075fe614)
-
-
-Mehrfachbeziehungen (Mehrfachrollen)
-
-Zwei Tabellen (z. B. tbl_Fahrten und tbl_Orte) können mehrere unabhängige Beziehungen zueinander haben.
-
-Diese Beziehungen müssen aussagekräftig benannt werden (z. B. "Startort", "Zielort", "wird angefahren in").
-
-Bei mc:mc-Beziehungen (viele-zu-viele) wird eine Transformationstabelle benötigt, z. B. tbl_Fahrtorte, die alle Orte auflistet, die bei einer Fahrt angefahren werden.
-
-(2) Rekursion (strenge Hierarchie)
-
-Eine Tabelle kann auch Beziehungen zu sich selbst haben.
-
-Beispiel: In tbl_Mitarbeiter ist jeder Mitarbeiter einem Vorgesetzten unterstellt.
-
-Dafür braucht es einen Fremdschlüssel in derselben Tabelle, der auf die eigene ID verweist.
-
-Da der oberste Mitarbeiter keinen Vorgesetzten hat, muss das Feld NULL-fähig sein.
-
-Es handelt sich um eine 1:mc-Beziehung (ein Vorgesetzter – mehrere Untergebene).
-
-(3) Einfache Hierarchie (Netzwerkstruktur)
-Wenn mehrere Vorgesetzte möglich sind, reicht eine Rekursion nicht.
-
-Man braucht eine Zwischentabelle, z. B. tbl_Hierarchie, mit zwei Fremdschlüsseln:
-
-Einer für den Vorgesetzten
-
-Einer für den Mitarbeiter
-
-So entsteht eine mc:mc-Beziehung innerhalb derselben Tabelle, aber mit unterschiedlichen Rollen ("ist Vorgesetzter von", "ist Mitarbeiter von").
-
-(4) Stücklistenproblem (mehrstufige Produktstruktur)
-Beispiel: Ein Produkt besteht aus mehreren Teilen, diese wiederum aus weiteren Teilen.
-
-Alle Artikel (Einzelteile + Baugruppen) stehen in einer Tabelle (tbl_Artikel).
-
-Eine zusätzliche Zusammensetzungstabelle wird benötigt:
-
-Gibt an, welches Teil in welchem Produkt vorkommt, mit Menge.
-
-Lässt sich mit rekursiven SQL-Abfragen lösen.
-
-Aufgabe Insert
-
+## INSERT-Aufgabe – Fehleranalyse und Korrektur
 
 ![image](https://github.com/user-attachments/assets/0a9cb626-dd75-4aea-9b0a-c65c791c7a3e)
 
