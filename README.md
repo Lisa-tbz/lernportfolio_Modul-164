@@ -1,17 +1,4 @@
 # Theorie: Datenbankmodellierung
-
-# Inhaltsverzeichnis
-
-1. [Generalisierung & Spezialisierung](#generalisierung--spezialisierung)  
-2. [Normalisierung](#normalisierung)  
-3. [ER-Modellierung](#er-modellierung)  
-4. [Transaktionen (SQL)](#transaktionen-sql)  
-5. [Identifying vs. Non-Identifying Relationship](#identifying-vs-non-identifying-relationship)  
-6. [DBMS – Datenbankmanagementsysteme](#dbms--datenbankmanagementsysteme)  
-7. [Mehrfachbeziehungen, Rekursion & Hierarchie](#mehrfachbeziehungen-rekursion--hierarchie)  
-8. [SQL Insert: Fehleranalyse](#sql-insert-fehleranalyse)  
-9. [Constraints & Indizes](#constraints--indizes)
-
 ---
 
 ## 1. Generalisierung & Spezialisierung
