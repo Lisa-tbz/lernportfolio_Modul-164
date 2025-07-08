@@ -1,7 +1,29 @@
 # Theorie: Datenbankmodellierung
 ---
+# Inhaltsverzeichnis
 
-## 1. Generalisierung & Spezialisierung
+- [Theorie: Datenbankmodellierung](#theorie-datenbankmodellierung)
+  - [1. Generalisierung & Spezialisierung](#1-generalisierung--spezialisierung)
+  - [Normalisierung](#normalisierung)
+- [Transaktionen (SQL Beispiel)](#transaktionen-sql-beispiel)
+  - [Beziehungsarten: Identifying / Non-Identifying Relationship](#beziehungsarten-identifying--non-identifying-relationship)
+    - [Identifying Relationship](#identifying-relationship-identifizierende-beziehung)
+    - [Non-Identifying Relationship](#non-identifying-relationship-nicht-identifizierende-beziehung)
+    - [Beispiel: Bestellung → Bestellposition](#identifying-relationship--beispiel-bestellung--bestellposition)
+    - [Anwendungsfälle](#anwendungsfälle-für-identifying-relationships-laut-chatgpt)
+- [Datenbankmanagementsysteme (DBMS)](#datenbankmanagementsysteme-dbms)
+
+- [INSERT-Aufgabe – Fehleranalyse und Korrektur](#insert-aufgabe--fehleranalyse-und-korrektur)
+- [Constraint](#constraint)
+- [Löschen und Datenintegrität](#löschen-in-professionellen-datenbanken-und-datenintegrität)
+- [Datenintegrität](#datenintegrität)
+- [Fremdschlüssel-Optionen beim Löschen](#fremdschlüssel-optionen-beim-löschen)
+- [Warum nicht einfach löschen?](#weshalb-können-in-professionellen-datenbanken-nicht-einfach-so-daten-gelöscht-werden)
+- [Wer stellt referentielle Integrität sicher?](#wer-stellt-die-referentielle-integrität-sicher)
+- [Referentielle Integrität](#referentielle-intergrität)
+
+
+# 1. Generalisierung & Spezialisierung
 
 ### Ausgangspunkt
 In der Attribut-basierten Modellierung entstehen Redundanzen, wenn:
@@ -100,7 +122,7 @@ COMMIT;
 
 ```
 
-## Beziehungsarten: Identifying / Non-Identifying Relationship
+# Beziehungsarten: Identifying / Non-Identifying Relationship
 
 ### Identifying Relationship (identifizierende Beziehung)
 
@@ -150,7 +172,7 @@ COMMIT;
 
 ---
 
-## Datenbankmanagementsysteme (DBMS)
+# Datenbankmanagementsysteme (DBMS)
 
 Ein **Datenbankmanagementsystem (DBMS)** ist eine Software zur Verwaltung von Datenbanken. Es ermöglicht die strukturierte Speicherung, Organisation und den Zugriff auf Daten.
 
@@ -204,7 +226,7 @@ Ein **Datenbankmanagementsystem (DBMS)** ist eine Software zur Verwaltung von Da
 
 ---
 
-## Weitere Beziehungstypen
+# Weitere Beziehungstypen
 
 ### Mehrfachbeziehungen (Mehrfachrollen)
 
@@ -245,7 +267,7 @@ Ein **Datenbankmanagementsystem (DBMS)** ist eine Software zur Verwaltung von Da
 
 ---
 
-## INSERT-Aufgabe – Fehleranalyse und Korrektur
+# INSERT-Aufgabe – Fehleranalyse und Korrektur
 
 ![image](https://github.com/user-attachments/assets/0a9cb626-dd75-4aea-9b0a-c65c791c7a3e)
 
@@ -363,7 +385,7 @@ Korrekt:
 INSERT INTO kunden VALUES (NULL, 'Jochen', 'Schmied', 2, 'Solingen');
 
 
-## Constraint
+# Constraint
 
 1. Wie wird beim Fremdschlüssel der Constraint NOT NULL erstellt?
 Der NOT NULL Constraint wird direkt bei der Definition der Fremdschlüsselspalte in der Tabelle angegeben, z.B.:
@@ -429,7 +451,7 @@ ON UPDATE CASCADE
 
 ON DELETE und ON UPDATE: Aktionen bei Löschung/Aktualisierung der referenzierten Zeile (CASCADE, SET NULL, NO ACTION, etc.)
 
-## Löschen in professionellen Datenbanken und Datenintegrität
+# Löschen in professionellen Datenbanken und Datenintegrität
 
 In professionellen Datenbanksystemen wird das Löschen von Daten mit dem SQL-Befehl DELETE in der Regel vermieden. Der Grund ist der mögliche Informationsverlust, der nicht nur ungewollt ist, sondern auch rechtliche oder betriebliche Probleme verursachen kann. Statt Daten zu löschen, werden folgende Strategien verwendet:
 
@@ -441,7 +463,7 @@ Stornierungen statt Löschungen: In Kassensystemen werden getätigte Käufe nich
 
 Zeitliche Abbildung durch Zusatztabellen: Statt Updates werden Zeitverläufe (z. B. Ausleihen) durch neue, separate Datensätze dokumentiert.
 
-## Datenintegrität:
+# Datenintegrität:
 
 Datenintegrität in einer Datenbank bezieht sich auf die Genauigkeit, Konsistenz und Vollständigkeit der in der Datenbank gespeicherten Daten. Sie stellt sicher, dass die Daten korrekt sind und nicht versehentlich oder absichtlich verändert werden.
 
@@ -454,7 +476,7 @@ Datentypen & Einschränkungen: Sorgen für korrekte und gültige Eingaben.
 Validierung: Prüft Eingaben vor der Speicherung.
 
 
-## Fremdschlüssel-Optionen beim Löschen 
+# Fremdschlüssel-Optionen beim Löschen 
 Beim Löschen eines Datensatzes in der Primärtabelle greifen definierte Regeln für abhängige Datensätze (Fremdschlüssel) in Detailtabellen:
 
 NO ACTION / RESTRICT:	Löschen nur möglich, wenn keine abhängigen Datensätze existieren. (Standard)
@@ -479,7 +501,7 @@ keine ungültigen Verweise entstehen,
 
 bei Lösch- oder Änderungsoperationen entsprechende Regeln (ON DELETE / ON UPDATE) eingehalten werden.
 
-## Referentielle Intergrität
+# Referentielle Intergrität
 Referentielle Integrität bedeutet, dass ein Fremdschlüssel (Foreign Key) in einer Tabelle nur auf existierende Werte im Primärschlüssel (Primary Key) einer anderen Tabelle verweisen darf.
 
 
@@ -503,7 +525,7 @@ WHERE FS_ID_Ort = 5;
 DELETE FROM tbl_orte
 WHERE ID_Ort = 5;
 
-## Alias
+# Alias
 
 Ein Alias in SQL wird verwendet, um einer Spalte in einer Tabelle oder einer Tabelle einen temporären Namen zu geben.
 
@@ -511,7 +533,7 @@ Aliase zu den Attributen werden verwendet, um Spaltennamen lesbarer zu machen. E
 
 Tabellenaliase müssen im gesamten Statement benutzt werden. 
 
-## Aggregatfunktionen
+# Aggregatfunktionen
 
 In MySQL dienen Aggregatsfunktionen dazu, Werte in einer Spalte zusammenzufassen oder zu berechnen.
 
@@ -537,20 +559,20 @@ Gibt den grössten Wert zurück:
 SELECT MAX(salary) FROM employees;
 
 
-## Group by
+# Group by
 
 In MySQL wird das GROUP BY-Statement verwendet, um Datensätze anhand einer oder mehrerer Spalten zu gruppieren. Es wird meist zusammen mit Aggregatsfunktionen wie COUNT, SUM, AVG, MIN oder MAX eingesetzt, um gruppierte Daten zusammenzufassen.
 
 
-## Having
+# Having
 
 In MySQL wird HAVING verwendet, um aggregierte Gruppenergebnisse nach einem GROUP BY-Statement zu filtern. Im Gegensatz zu WHERE, das vor der Gruppierung wirkt, filtert HAVING nach der Gruppierung, basierend auf Aggregatsfunktionen wie SUM, AVG, COUNT usw.
 
 
-## Subquery
+# Subquery
 Eine Subquery ist eine SQL-Abfrage, die innerhalb einer anderen Abfrage steht, typischerweise in WHERE, FROM, HAVING oder SELECT. Auch in UPDATE, INSERT oder DELETE kann sie verwendet werden. Sie wird in Klammern geschrieben und zuerst ausgeführt.
 
-## Arten von Subqueries
+# Arten von Subqueries
 
 ### Skalare Subquery
 Gibt genau einen Wert (eine Zeile, eine Spalte) zurück.
@@ -564,7 +586,7 @@ Wird z. B. mit IN, NOT IN, EXISTS, ANY, ALL kombiniert.
 
 
 
-## Backup-Arten
+# Backup-Arten
 Online-Backup: Datenbank bleibt aktiv, Änderungen werden zwischengespeichert.
 
 Offline-Backup: Datenbank wird für die Sicherung heruntergefahren  
@@ -607,7 +629,7 @@ Integrität: Da der Server während des Backups laufen muss, können Datenänder
 
 Kein Backup von Log- oder Konfigurationsdateien (nur Daten und Struktur).
 
-## Was ist der Unterschied zwischen online- und offline-Backups?
+# Was ist der Unterschied zwischen online- und offline-Backups?
 Online-Backup (Hot Backup):
 
 Backup wird gemacht, während der MySQL-Server läuft und Daten verarbeitet.
